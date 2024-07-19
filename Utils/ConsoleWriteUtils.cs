@@ -1,6 +1,6 @@
-using System.Reflection.PortableExecutable;
+namespace RentalManagement.Utils;
 
-public static class ConsoleUtils
+public static class ConsoleWriteUtils
 {
     public static int CONSOLE_WIDTH = 80;
     public static int FIELD_LABEL_WIDTH = 18;
@@ -28,13 +28,14 @@ public static class ConsoleUtils
     }
     public static void WriteLine(string line, char fillingSymbol = '\0')
     {
+        string outputLine = line.ToUpper().Substring(0, (line.Length > CONSOLE_WIDTH) ? CONSOLE_WIDTH : line.Length);
         if (fillingSymbol != '\0')
         {
             Console.WriteLine("{0} {1}",
-                line.ToUpper().Substring(0, (line.Length > CONSOLE_WIDTH) ? CONSOLE_WIDTH : line.Length),
+                outputLine,
                 new string(fillingSymbol, CONSOLE_WIDTH - line.Length - 1));
         } else { 
-            Console.WriteLine(line.ToUpper().Substring(0, CONSOLE_WIDTH));
+            Console.WriteLine(outputLine);
         }
     }
 

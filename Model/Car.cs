@@ -1,4 +1,5 @@
 ﻿using RentalManagement.Model.Enum;
+using RentalManagement.Utils;
 
 namespace RentalManagement.Model;
 public class Car : Vehicle
@@ -19,11 +20,11 @@ public class Car : Vehicle
     }
     public override void DisplayInfo()
     {
-        ConsoleUtils.WriteField("Type", "Car");
+        ConsoleWriteUtils.WriteField("Type", string.Format("Car (#{0})", this.Id));
         base.DisplayInfo();
-        ConsoleUtils.WriteField("Seats", this.Seats);
-        ConsoleUtils.WriteField("Engine Type", this.EngineType);
-        ConsoleUtils.WriteField("Transmission Type", this.TransmissionType);
-        ConsoleUtils.WriteField("Convertible", this.Convertible);
+        ConsoleWriteUtils.WriteField("Seats", this.Seats);
+        ConsoleWriteUtils.WriteField("Engine Type", this.EngineType);
+        ConsoleWriteUtils.WriteField("Transmission Type", this.TransmissionType);
+        ConsoleWriteUtils.WriteField("Convertible", this.Convertible);
     }
 }

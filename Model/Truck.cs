@@ -1,4 +1,5 @@
 ﻿using RentalManagement.Model.Enum;
+using RentalManagement.Utils;
 
 namespace RentalManagement.Model;
 public class Truck : Vehicle
@@ -19,10 +20,10 @@ public class Truck : Vehicle
     }
     public override void DisplayInfo()
     {
-        ConsoleUtils.WriteField("Type", "Truck");
+        ConsoleWriteUtils.WriteField("Type", string.Format("Truck (#{0})", this.Id));
         base.DisplayInfo();
-        ConsoleUtils.WriteField("Capacity", this.Capacity);
-        ConsoleUtils.WriteField("Truck Type", this.TruckType);
-        ConsoleUtils.WriteField("Four Wheel Drive", this.FourWheelDrive);
+        ConsoleWriteUtils.WriteField("Capacity", this.Capacity);
+        ConsoleWriteUtils.WriteField("Truck Type", this.TruckType);
+        ConsoleWriteUtils.WriteField("Four Wheel Drive", this.FourWheelDrive);
     }
 }

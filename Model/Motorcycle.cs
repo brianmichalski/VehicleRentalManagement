@@ -1,9 +1,9 @@
 ﻿using RentalManagement.Model.Enum;
+using RentalManagement.Utils;
 
 namespace RentalManagement.Model;
 public class Motorcycle : Vehicle
 {
-
     public int EngineCapacity { get; set; }
     public FuelType FuelType { get; set; }  
     public bool HasFairing { get; set; }
@@ -18,10 +18,10 @@ public class Motorcycle : Vehicle
     }
     public override void DisplayInfo()
     {
-        ConsoleUtils.WriteField("Type", "Motorcycle");
+        ConsoleWriteUtils.WriteField("Type", string.Format("Motorcycle (#{0})", this.Id));
         base.DisplayInfo();
-        ConsoleUtils.WriteField("Engine Capacity", this.EngineCapacity);
-        ConsoleUtils.WriteField("Fuel Type", this.FuelType);
-        ConsoleUtils.WriteField("Has Fairing", this.HasFairing);
+        ConsoleWriteUtils.WriteField("Engine Capacity", this.EngineCapacity);
+        ConsoleWriteUtils.WriteField("Fuel Type", this.FuelType);
+        ConsoleWriteUtils.WriteField("Has Fairing", this.HasFairing);
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace RentalManagement.Model;
+﻿using RentalManagement.Utils;
+
+namespace RentalManagement.Model;
 public abstract class Vehicle
 {
     public int Id { get; set;  }
@@ -16,10 +18,10 @@ public abstract class Vehicle
 	}
     public virtual void DisplayInfo()
     {
-        ConsoleUtils.WriteField("Model", this.Model);
-        ConsoleUtils.WriteField("Make", this.Manufacturer);
-        ConsoleUtils.WriteField("Year", this.Year);
-        ConsoleUtils.WriteField("Rental Price", this.RentalPrice);
+        ConsoleWriteUtils.WriteField("Model", this.Model);
+        ConsoleWriteUtils.WriteField("Make", this.Manufacturer);
+        ConsoleWriteUtils.WriteField("Year", this.Year);
+        ConsoleWriteUtils.WriteField("Rental Price", this.RentalPrice);
     }
 
     public override bool Equals(object? obj)

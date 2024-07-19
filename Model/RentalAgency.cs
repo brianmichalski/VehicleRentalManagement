@@ -1,9 +1,15 @@
-﻿namespace RentalManagement.Model;
+﻿using RentalManagement.Utils;
+
+namespace RentalManagement.Model;
 public class RentalAgency
 {
     public string Name { get; set; }
     public string Address { get; set; }
     public double TotalRevenue { get; set; }
+
+    public List<Vehicle> Vehicles { 
+        get => this.fleet.Keys.ToList();
+    }
 
 	// The bool value in the Dictionary indicates whether the vehicle is rented or not
     Dictionary<Vehicle, bool> fleet;
@@ -73,12 +79,26 @@ public class RentalAgency
         return this.fleet.Where(fleetItem => fleetItem.Value).Count();
     }
 
-    public void DisplayFleet()
+    public void DisplayInfo()
     {
-        ConsoleUtils.WriteHeader("Fleet Report", '-', true);
+        int totalVehicles = this.CountTotalVehicles();
+        int rentedVehicles = this.CountRentedVehicles();
+
+        ConsoleWriteUtils.WriteHeader("Garage info", '=', true);
+        ConsoleWriteUtils.WriteField("Name", this.Name);
+        ConsoleWriteUtils.WriteField("Address", this.Address);
+        ConsoleWriteUtils.WriteHeader("Fleet summary", '-');
+        ConsoleWriteUtils.WriteField("Rented", rentedVehicles);
+        ConsoleWriteUtils.WriteField("Available", (totalVehicles - rentedVehicles));
+        ConsoleWriteUtils.WriteField("Total", totalVehicles);
+    }
+
+    public void DisplayFleetDetails()
+    {
+        ConsoleWriteUtils.WriteHeader("Fleet Details", '-', true);
         if ((this.fleet?.Count ?? 0) == 0)
         {
-            ConsoleUtils.WriteLine("No vehicles in the fleet", '*');
+            ConsoleWriteUtils.WriteLine("No vehicles in the fleet", '*');
             return;
         }
         foreach (var fleetItem in this.fleet)
@@ -87,8 +107,28 @@ public class RentalAgency
             bool isVehicleRented = fleetItem.Value;
 
             vehicle.DisplayInfo();
-            ConsoleUtils.WriteField("* Rent status", isVehicleRented ? "Rented" : "Available");
-            ConsoleUtils.WriteDividingLine('-');
+            ConsoleWriteUtils.WriteField("* Rent status", isVehicleRented ? "Rented" : "Available");
+            ConsoleWriteUtils.WriteDividingLine('-');
+        }
+    }
+
+    public void DisplayFleetList()
+    {
+        ConsoleWriteUtils.WriteHeader("Fleet List", '-', true);
+        if ((this.fleet?.Count ?? 0) == 0)
+        {
+            ConsoleWriteUtils.WriteLine("No vehicles in the fleet", '*');
+            return;
+        }
+        foreach (var fleetItem in this.fleet)
+        {
+            Vehicle vehicle = fleetItem.Key;
+            ConsoleWriteUtils.WriteLine(string.Format("#{0} - {1} {2} ({3})", 
+                vehicle.Id,
+                vehicle.Manufacturer,
+                vehicle.Model,
+                vehicle.Year));
+            ConsoleWriteUtils.WriteDividingLine('-');
         }
     }
 }
