@@ -6,12 +6,27 @@ public class RentalAgency
     public string Name { get; set; }
     public string Address { get; set; }
     public double TotalRevenue { get; set; }
-
-    public List<Vehicle> Vehicles { 
-        get => this.fleet.Keys.ToList();
+    public List<Vehicle> AllVehicles
+    {
+        get => this.fleet
+            .Select(v => v.Key)
+            .ToList();
+    }
+    public List<Vehicle> VehiclesAvailable { 
+        get => this.fleet
+            .Where(v => !v.Value)
+            .Select(v => v.Key)
+            .ToList();
+    }
+    public List<Vehicle> VehiclesRented
+    {
+        get => this.fleet
+            .Where(v => v.Value)
+            .Select(v => v.Key)
+            .ToList();
     }
 
-	// The bool value in the Dictionary indicates whether the vehicle is rented or not
+    // The bool value in the Dictionary indicates whether the vehicle is rented or not
     Dictionary<Vehicle, bool> fleet;
 
     public RentalAgency()
@@ -27,6 +42,11 @@ public class RentalAgency
 
 	public void RemoveVehicle(Vehicle vehicle)
 	{
+        this.CheckVehicle(vehicle);
+        if (this.fleet[vehicle])
+        {
+            throw new InvalidOperationException("A car can not be removed when in rented status");
+        }
 		this.fleet.Remove(vehicle);
     }
     private void CheckVehicle(Vehicle vehicle)
@@ -69,28 +89,23 @@ public class RentalAgency
         // Set the vehicle as not rented
         this.fleet[vehicle] = false;
     }
-    public int CountTotalVehicles()
-    {
-        return this.fleet.Count();
-    }
-
-    public int CountRentedVehicles() 
-    {
-        return this.fleet.Where(fleetItem => fleetItem.Value).Count();
-    }
 
     public void DisplayInfo()
     {
-        int totalVehicles = this.CountTotalVehicles();
-        int rentedVehicles = this.CountRentedVehicles();
+        int countVehiclesAvailable = this.VehiclesAvailable.Count;
+        int countVehiclesRented = this.VehiclesRented.Count;
 
-        ConsoleWriteUtils.WriteHeader("Garage info", '=', true);
+        ConsoleWriteUtils.WriteHeader("Agency info", '=', true);
         ConsoleWriteUtils.WriteField("Name", this.Name);
         ConsoleWriteUtils.WriteField("Address", this.Address);
+
+        ConsoleWriteUtils.WriteHeader("Financial status", '-');
+        ConsoleWriteUtils.WriteField("Total revenue", this.TotalRevenue);
+
         ConsoleWriteUtils.WriteHeader("Fleet summary", '-');
-        ConsoleWriteUtils.WriteField("Rented", rentedVehicles);
-        ConsoleWriteUtils.WriteField("Available", (totalVehicles - rentedVehicles));
-        ConsoleWriteUtils.WriteField("Total", totalVehicles);
+        ConsoleWriteUtils.WriteField("Rented", countVehiclesAvailable);
+        ConsoleWriteUtils.WriteField("Available",countVehiclesRented);
+        ConsoleWriteUtils.WriteField("Total", countVehiclesAvailable + countVehiclesRented);
     }
 
     public void DisplayFleetDetails()
@@ -123,11 +138,13 @@ public class RentalAgency
         foreach (var fleetItem in this.fleet)
         {
             Vehicle vehicle = fleetItem.Key;
-            ConsoleWriteUtils.WriteLine(string.Format("#{0} - {1} {2} ({3})", 
+            ConsoleWriteUtils.WriteLine(string.Format("#{0} - {1} {2} ({3}) {4}", 
                 vehicle.Id,
                 vehicle.Manufacturer,
                 vehicle.Model,
-                vehicle.Year));
+                vehicle.Year,
+                fleetItem.Value ? "* Rented" : ""));
+
             ConsoleWriteUtils.WriteDividingLine('-');
         }
     }

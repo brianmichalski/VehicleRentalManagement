@@ -27,7 +27,7 @@ public abstract class Vehicle
     public override bool Equals(object? obj)
     {
         if (this?.Id == null || obj == null 
-            || !obj.GetType().IsAssignableFrom(typeof(Vehicle))) {
+            || !obj.GetType().IsSubclassOf(typeof(Vehicle))) {
             return false;
         }
 

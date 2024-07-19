@@ -10,35 +10,42 @@ namespace VehicleRentalManagement.Utils
             ConsoleWriteUtils.WriteLine("Press any key to continue...");
             Console.ReadKey();
         }
-        public static string ReadLine(string prompt)
+        public static string ReadLine(string prompt, bool mandatory = true)
         {
             while (true)
             {
                 Console.Write("{0}: ", prompt);
                 string? input = Console.ReadLine();
-                if (input != null)
+                if (input != null && (!mandatory || input.Trim() != ""))
                 {
                     return input;
                 }
                 ConsoleWriteUtils.WriteLine("Invalid input. Provide a text.");
             }
         }
-        public static T ReadFromEnum<T>(string prompt) where T : Enum
+        public static T ReadFromEnum<T>(string prompt, out bool exit) where T : Enum
         {
             while (true)
             {
                 Console.WriteLine("{0}: ", prompt);
                 foreach (var value in Enum.GetValues(typeof(T)))
                 {
-                    ConsoleWriteUtils.WriteLine($"{(int)value}. {value}");
+                    ConsoleWriteUtils.WriteLine($"{(int)value+1}. {value}");
                 }
+                ConsoleWriteUtils.WriteLine("0. Return");
 
                 Console.Write("Choose one option: ");
                 string? input = Console.ReadLine();
 
-                if (int.TryParse(input, out int choice) && Enum.IsDefined(typeof(T), choice))
+                if (int.TryParse(input, out int choice))
                 {
-                    return (T)(object)choice;
+                    if (choice == 0)
+                    {
+                        exit = true;
+                        return default;
+                    }
+                    exit = false;
+                    return (T)(object)(choice-1);
                 }
 
                 ConsoleWriteUtils.WriteLine("Invalid input. Please try again.");
@@ -53,16 +60,19 @@ namespace VehicleRentalManagement.Utils
                 Console.Write("{0}: ", prompt);
                 string? input = Console.ReadLine();
 
-                if (int.TryParse(input, out result) && result >= minimumValue && result <= maximumValue)
+                if (int.TryParse(input, out result))
                 {
-                    return result;
+                    if (result == 0 || result >= minimumValue && result <= maximumValue)
+                    {
+                        return result;
+                    }
                 }
 
                 Console.WriteLine("Invalid input. Value must be between {0} and {1}.", 
                     minimumValue, maximumValue);
             }
         }
-        public static bool ReadBoolean(string prompt)
+        public static bool ReadBoolean(string prompt, out bool exit)
         {
             string[] yesOptions = { "y", "yes" };
             string[] noOptions = { "n", "no" };
@@ -70,7 +80,13 @@ namespace VehicleRentalManagement.Utils
             {
                 Console.Write("{0}: ", prompt);
                 string? input = Console.ReadLine()?.Trim()?.ToLower();
+                if (input == null || input.Trim() == "")
+                {
+                    exit = true;
+                    return default;
+                }
 
+                exit = false;
                 if (yesOptions.Contains(input))
                 {
                     return true;
