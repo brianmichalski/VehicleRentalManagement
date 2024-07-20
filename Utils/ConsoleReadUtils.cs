@@ -33,10 +33,14 @@ namespace VehicleRentalManagement.Utils
                     ConsoleWriteUtils.WriteLine($"{(int)value+1}. {value}");
                 }
                 ConsoleWriteUtils.WriteLine("0. Return");
+                ConsoleWriteUtils.WriteBlankLines(1);
 
-                Console.Write("Choose one option: ");
+                Console.Write("Choose one option [0]: ");
                 string? input = Console.ReadLine();
-
+                if (input == null || input.Trim() == "")
+                {
+                    input = "0";
+                }
                 if (int.TryParse(input, out int choice))
                 {
                     if (choice == 0)

@@ -59,6 +59,7 @@ public class Program
                     this.DisplayReportsMenu();
                     break;
                 case 0:
+                    ConsoleWriteUtils.WriteBlankLines(1);
                     bool confirmExit = ConsoleReadUtils.ReadBoolean("Exit the system (y/n)?", out confirmExit);
                     if (confirmExit)
                     {
@@ -78,16 +79,37 @@ public class Program
         Console.Clear();
         ConsoleWriteUtils.WriteHeader("Set up Agency Info", '=');
 
+        bool anyChange = false;
+
+        ConsoleWriteUtils.WriteLine(string.Format("[{0}]", this.rentalAgency.Name));
         string name = ConsoleReadUtils.ReadLine("Agency name", false);
-        if ((name ?? "") == "") { return; }
+        if ((name ?? "") == "") {
+            name = this.rentalAgency.Name;
+        } else
+        {
+            anyChange = true;
+        }
 
-        string address = this.rentalAgency.Address = ConsoleReadUtils.ReadLine("Agency address");
-        if ((address ?? "") == "") { return; }
+        ConsoleWriteUtils.WriteLine(string.Format("[{0}]", this.rentalAgency.Address));
+        string address = ConsoleReadUtils.ReadLine("Agency address", false);
+        if ((address ?? "") == "")
+        {
+            address = this.rentalAgency.Address;
+        } else
+        {
+            anyChange = true;
+        }
 
-        this.rentalAgency.Name = name;
-        this.rentalAgency.Address = address;
-
-        ConsoleWriteUtils.WriteLine("[Saved] Agency info updated!");
+        ConsoleWriteUtils.WriteBlankLines(1);
+        if (anyChange)
+        {
+            this.rentalAgency.Name = name;
+            this.rentalAgency.Address = address;
+            ConsoleWriteUtils.WriteLine("[Saved] Agency info updated!");
+        } else
+        {
+            ConsoleWriteUtils.WriteLine("[Warn] Nothing was changed.");
+        }
         ConsoleReadUtils.AskPressingForAnyKey();
     }
 
@@ -258,15 +280,28 @@ public class Program
         {
             return;
         }
-        string manufacturer = ConsoleReadUtils.ReadLine("Manufacturer");
-        string model = ConsoleReadUtils.ReadLine("Model");
+
+        ConsoleWriteUtils.WriteBlankLines(1);
+        ConsoleWriteUtils.WriteLine(string.Format("Adding new {0}", vehicleType), '-');
+
+        string manufacturer = ConsoleReadUtils.ReadLine("Manufacturer", false);
+        if (manufacturer == "") { return; }
+
+        string model = ConsoleReadUtils.ReadLine("Model", false);
+        if (model == "") { return; }
+
         int year = ConsoleReadUtils.ReadInteger("Year", 1990, DateTime.Now.Year);
-        int seats = ConsoleReadUtils.ReadInteger("Seats", 2, 7);
+        if (year == 0) { return; }
+
         int rentalPrice = ConsoleReadUtils.ReadInteger("Rental price", 40, 200);
+        if (rentalPrice == 0) { return; }
 
         switch (vehicleType)
         {
             case VehicleType.Car:
+                int seats = ConsoleReadUtils.ReadInteger("Seats", 2, 7);
+                if (seats == 0) { return; }
+
                 EngineType engineType = ConsoleReadUtils.ReadFromEnum<EngineType>("Engine", out exit);
                 if (exit) { return; }
 
@@ -314,9 +349,20 @@ public class Program
                 vehicle = truck;
                 break;
         }
-        this.rentalAgency.AddVehicle(vehicle);
+        Console.Clear();
+        vehicle.DisplayInfo();
+        ConsoleWriteUtils.WriteBlankLines(1);
+        bool confirm = ConsoleReadUtils.ReadBoolean("Confirm", out confirm);
+        if (confirm)
+        {
+            this.rentalAgency.AddVehicle(vehicle);
 
-        ConsoleWriteUtils.WriteLine("[Saved] Vehicle added!");
+            ConsoleWriteUtils.WriteBlankLines(1);
+            ConsoleWriteUtils.WriteLine("[Saved] Vehicle added!");
+        } else
+        {
+            ConsoleWriteUtils.WriteLine("[Warn] Vehicle discarded!");
+        }
         ConsoleReadUtils.AskPressingForAnyKey();
     }
 
@@ -349,6 +395,7 @@ public class Program
                 Vehicle vehicleChoice = this.rentalAgency.AllVehicles[choice - 1];
                 this.rentalAgency.RemoveVehicle(vehicleChoice);
 
+                ConsoleWriteUtils.WriteBlankLines(1);
                 ConsoleWriteUtils.WriteLine("[Saved] Vehicle removed!");
                 ConsoleReadUtils.AskPressingForAnyKey();
             }

@@ -110,7 +110,7 @@ public class RentalAgency
 
     public void DisplayFleetDetails()
     {
-        ConsoleWriteUtils.WriteHeader("Fleet Details", '-', true);
+        ConsoleWriteUtils.WriteHeader("Fleet Details", '=', true);
         if ((this.fleet?.Count ?? 0) == 0)
         {
             ConsoleWriteUtils.WriteLine("No vehicles in the fleet", '*');
@@ -129,7 +129,7 @@ public class RentalAgency
 
     public void DisplayFleetList()
     {
-        ConsoleWriteUtils.WriteHeader("Fleet List", '-', true);
+        ConsoleWriteUtils.WriteHeader("Fleet List", '=', true);
         if ((this.fleet?.Count ?? 0) == 0)
         {
             ConsoleWriteUtils.WriteLine("No vehicles in the fleet", '*');

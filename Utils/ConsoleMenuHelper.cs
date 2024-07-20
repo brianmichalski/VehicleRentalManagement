@@ -25,8 +25,9 @@ public class MenuHelper
 	{
 		int choice;
 		while (true)
-		{
-			Console.Write("> Choose an option [0]: ");
+        {
+            ConsoleWriteUtils.WriteBlankLines(1);
+            Console.Write("> Choose an option [0]: ");
 			string? inputChoice = Console.ReadLine();
 			bool parsingSuccess = int.TryParse(inputChoice?.Length > 0 
 				? inputChoice : "0", out choice);
