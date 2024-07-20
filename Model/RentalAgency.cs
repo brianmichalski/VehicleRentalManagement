@@ -103,8 +103,8 @@ public class RentalAgency
         ConsoleWriteUtils.WriteField("Total revenue", this.TotalRevenue);
 
         ConsoleWriteUtils.WriteHeader("Fleet summary", '-');
-        ConsoleWriteUtils.WriteField("Rented", countVehiclesAvailable);
-        ConsoleWriteUtils.WriteField("Available",countVehiclesRented);
+        ConsoleWriteUtils.WriteField("Rented", countVehiclesRented);
+        ConsoleWriteUtils.WriteField("Available", countVehiclesAvailable);
         ConsoleWriteUtils.WriteField("Total", countVehiclesAvailable + countVehiclesRented);
     }
 
